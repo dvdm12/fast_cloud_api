@@ -1,0 +1,59 @@
+name: Deploy Lambdas to AWS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.12.5"
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run Tests
+      run: pytest tests/
+
+    - name: Deploy Lambdas
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: |
+        declare -A LAMBDAS=(
+          ["simple_greeting"]="simple_greeting.lambda_handler"
+          ["personalized_greeting"]="personalized_greeting.lambda_handler"
+          ["basic_calculator"]="basic_calculator.lambda_handler"
+          ["text_processing"]="text_processing.lambda_handler"
+          ["dynamodb_connection"]="dynamodb_connection.lambda_handler"
+        )
+
+        for LAMBDA_NAME in "${!LAMBDAS[@]}"; do
+          HANDLER=${LAMBDAS[$LAMBDA_NAME]}
+          cp lambdas/$LAMBDA_NAME.py package/
+          cd package
+          zip -r ../$LAMBDA_NAME.zip .
+          cd ..
+          aws lambda update-function-code \
+            --function-name $LAMBDA_NAME \
+            --zip-file fileb://$LAMBDA_NAME.zip \
+            --region us-east-1 || \
+          aws lambda create-function \
+            --function-name $LAMBDA_NAME \
+            --runtime python3.9 \
+            --role arn:aws:iam::<account-id>:role/<role-name> \
+            --handler $HANDLER \
+            --zip-file fileb://$LAMBDA_NAME.zip \
+            --region us-east-1
+        done

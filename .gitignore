@@ -1,0 +1,15 @@
+# Virtual environment
+.venv/
+
+# Bytecode files
+__pycache__/
+*.py[cod]
+
+# Environment variables
+.env
+
+# AWS Lambda ZIP files
+*.zip
+
+# Pytest files
+pytest.ini
