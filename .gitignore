@@ -1,15 +1,23 @@
-# Virtual environment
+# Entornos virtuales
 .venv/
+.env/
 
-# Bytecode files
+# Archivos y carpetas de IDEs
+.idea/
+.vscode/
+
+# Artefactos de compilación y pruebas
+*.pyc
+*.pyo
 __pycache__/
-*.py[cod]
+*.pytest_cache/
 
-# Environment variables
+# Configuración local y archivos sensibles
 .env
 
-# AWS Lambda ZIP files
-*.zip
+# Archivos de registros y temporales
+*.log
+*.tmp
 
-# Pytest files
-pytest.ini
+# Archivos específicos del proyecto
+test_main.http
