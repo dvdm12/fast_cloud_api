@@ -24,3 +24,13 @@ pytest_cache/
 
 # Configuración y dependencias instaladas
 *.egg-info/
+
+# Ignorar el paquete del calculador
+basic_calculator_package/
+
+# Ignorar el paquete ZIP
+zip/package/
+
+# Ignorar archivos de configuración y prueba
+pytest.ini
+test_main.http
