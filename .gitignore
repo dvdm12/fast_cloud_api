@@ -1,23 +1,26 @@
-# Entornos virtuales
+# Entorno virtual de Python
 .venv/
-.env/
-
-# Archivos y carpetas de IDEs
-.idea/
-.vscode/
-
-# Artefactos de compilación y pruebas
 *.pyc
-*.pyo
 __pycache__/
-*.pytest_cache/
+
+# Configuración de AWS
+aws-config/
+
+# Archivos temporales y de salida
+temp-zip-content/
+*.zip
 
 # Configuración local y archivos sensibles
 .env
 
-# Archivos de registros y temporales
-*.log
-*.tmp
+# Archivos generados por el editor/IDE
+.vscode/
+.idea/
+*.swp
 
-# Archivos específicos del proyecto
-test_main.http
+# Archivos de prueba y caché
+pytest_cache/
+*.log
+
+# Configuración y dependencias instaladas
+*.egg-info/
