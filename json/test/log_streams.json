@@ -1,0 +1,44 @@
+﻿{
+    "logStreams": [
+        {
+            "logStreamName": "2024/11/17/[$LATEST]1940366a765d476ab389aaf1e69df4fc",
+            "creationTime": 1731824411732,
+            "firstEventTimestamp": 1731824406678,
+            "lastEventTimestamp": 1731824406771,
+            "lastIngestionTime": 1731824411740,
+            "uploadSequenceToken": "49039859609697935336018241900560060495782684975032813384",
+            "arn": "arn:aws:logs:us-east-1:869935103135:log-group:/aws/lambda/SimpleGreeting:log-stream:2024/11/17/[$LATEST]1940366a765d476ab389aaf1e69df4fc",
+            "storedBytes": 0
+        },
+        {
+            "logStreamName": "2024/11/17/[$LATEST]6ce801865d514cd38229b3697f82df48",
+            "creationTime": 1731823218591,
+            "firstEventTimestamp": 1731823215818,
+            "lastEventTimestamp": 1731823215818,
+            "lastIngestionTime": 1731823218601,
+            "uploadSequenceToken": "49039859609696349382256579081820380809881587543206119306",
+            "arn": "arn:aws:logs:us-east-1:869935103135:log-group:/aws/lambda/SimpleGreeting:log-stream:2024/11/17/[$LATEST]6ce801865d514cd38229b3697f82df48",
+            "storedBytes": 0
+        },
+        {
+            "logStreamName": "2024/11/17/[$LATEST]6d16ae046a49473c89f37853a71d374f",
+            "creationTime": 1731822656395,
+            "firstEventTimestamp": 1731822654636,
+            "lastEventTimestamp": 1731822986012,
+            "lastIngestionTime": 1731822995015,
+            "uploadSequenceToken": "49039859609696052185485913515620022129540137011501451042",
+            "arn": "arn:aws:logs:us-east-1:869935103135:log-group:/aws/lambda/SimpleGreeting:log-stream:2024/11/17/[$LATEST]6d16ae046a49473c89f37853a71d374f",
+            "storedBytes": 0
+        },
+        {
+            "logStreamName": "2024/11/17/[$LATEST]7a688a71ff3f498387065eba481a2408",
+            "creationTime": 1731825483230,
+            "firstEventTimestamp": 1731825479915,
+            "lastEventTimestamp": 1731826068733,
+            "lastIngestionTime": 1731826077750,
+            "uploadSequenceToken": "49039859609700149843151499528253478585364399159533750016",
+            "arn": "arn:aws:logs:us-east-1:869935103135:log-group:/aws/lambda/SimpleGreeting:log-stream:2024/11/17/[$LATEST]7a688a71ff3f498387065eba481a2408",
+            "storedBytes": 0
+        }
+    ]
+}

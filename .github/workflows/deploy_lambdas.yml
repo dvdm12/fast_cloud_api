@@ -1,59 +1,102 @@
-name: Deploy Lambdas to AWS
+name: Deploy AWS Lambdas
 
 on:
   push:
     branches:
-      - main
+      - main  # Desplegar cuando se realicen cambios en la rama principal
 
 jobs:
-  test_and_deploy:
+  deploy-simple-greeting:
+    name: Deploy Simple Greeting Lambda
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout Code
       uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
+    - name: Setup AWS CLI
+      uses: aws-actions/configure-aws-cli@v2
       with:
-        python-version: "3.12.5"
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
 
-    - name: Install Dependencies
+    - name: Zip Lambda Function - Simple Greeting
       run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        mkdir -p zip
+        zip -j zip/simple_greeting.zip lambdas/simple_greeting.py
 
-    - name: Run Tests
-      run: pytest tests/
-
-    - name: Deploy Lambdas
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    - name: Deploy Lambda Function - Simple Greeting
       run: |
-        declare -A LAMBDAS=(
-          ["simple_greeting"]="simple_greeting.lambda_handler"
-          ["personalized_greeting"]="personalized_greeting.lambda_handler"
-          ["basic_calculator"]="basic_calculator.lambda_handler"
-          ["text_processing"]="text_processing.lambda_handler"
-          ["dynamodb_connection"]="dynamodb_connection.lambda_handler"
-        )
+        aws lambda update-function-code \
+          --function-name simple_greeting \
+          --zip-file fileb://zip/simple_greeting.zip \
+          --region us-east-1
 
-        for LAMBDA_NAME in "${!LAMBDAS[@]}"; do
-          HANDLER=${LAMBDAS[$LAMBDA_NAME]}
-          cp lambdas/$LAMBDA_NAME.py package/
-          cd package
-          zip -r ../$LAMBDA_NAME.zip .
-          cd ..
-          aws lambda update-function-code \
-            --function-name $LAMBDA_NAME \
-            --zip-file fileb://$LAMBDA_NAME.zip \
-            --region us-east-1 || \
-          aws lambda create-function \
-            --function-name $LAMBDA_NAME \
-            --runtime python3.9 \
-            --role arn:aws:iam::<account-id>:role/<role-name> \
-            --handler $HANDLER \
-            --zip-file fileb://$LAMBDA_NAME.zip \
-            --region us-east-1
-        done
+    - name: Verify Deployment - Simple Greeting
+      run: |
+        aws lambda get-function \
+          --function-name simple_greeting
+
+  deploy-personalized-greeting:
+    name: Deploy Personalized Greeting Lambda
+    runs-on: ubuntu-latest
+    needs: deploy-simple-greeting  # Ejecutar después de SaludoSimple
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Setup AWS CLI
+      uses: aws-actions/configure-aws-cli@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Zip Lambda Function - Personalized Greeting
+      run: |
+        mkdir -p zip
+        zip -j zip/personalized_greeting.zip lambdas/personalized_greeting.py
+
+    - name: Deploy Lambda Function - Personalized Greeting
+      run: |
+        aws lambda update-function-code \
+          --function-name personalized_greeting \
+          --zip-file fileb://zip/personalized_greeting.zip \
+          --region us-east-1
+
+    - name: Verify Deployment - Personalized Greeting
+      run: |
+        aws lambda get-function \
+          --function-name personalized_greeting
+
+  deploy-basic-calculator:
+    name: Deploy Basic Calculator Lambda
+    runs-on: ubuntu-latest
+    needs: deploy-personalized-greeting  # Ejecutar después de SaludoPersonalizado
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Setup AWS CLI
+      uses: aws-actions/configure-aws-cli@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Zip Lambda Function - Basic Calculator
+      run: |
+        mkdir -p zip
+        zip -j zip/basic_calculator.zip lambdas/basic_calculator.py
+
+    - name: Deploy Lambda Function - Basic Calculator
+      run: |
+        aws lambda update-function-code \
+          --function-name BasicCalculator \
+          --zip-file fileb://zip/basic_calculator.zip \
+          --region us-east-1
+
+    - name: Verify Deployment - Basic Calculator
+      run: |
+        aws lambda get-function \
+          --function-name BasicCalculator

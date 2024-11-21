@@ -1,5 +1,8 @@
 def lambda_handler(event, context):
     return {
         "statusCode": 200,
-        "body": '{"message": "Hello, welcome to the system!"}'
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "body": "{\"message\": \"Hello, welcome to the system!\"}"
     }
